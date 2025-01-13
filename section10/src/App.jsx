@@ -3,7 +3,7 @@ import Header from './components/Header'
 import Editer from './components/Editer'
 import List from './components/List'
 
-import {useState, useRef, useReducer} from 'react'
+import {useState, useRef, useReducer,useCallback} from 'react'
 
 const mockData=[
   {
@@ -45,7 +45,7 @@ function App() {
   const [todos, dispatch] = useReducer(reducer, mockData);
   const idRef = useRef(3)
 
-  const onCreate = (content) => {
+  const onCreate = useCallback((content) => {
     dispatch({
       type: "CREATE",
       data : {
@@ -55,21 +55,21 @@ function App() {
         date: new Date().getTime()
       }
     })
-  }
+  },[])
 
-  const onUpdate = (targetId) => {
+  const onUpdate = useCallback((targetId) => {
    dispatch({
     type:"UPDATE",
     targetId : targetId,
    })
-  }
+  },[])
 
-  const onDelete = (targetId) =>{
+  const onDelete = useCallback((targetId) =>{
     dispatch({
       type: "DELETE",
       targetId : targetId,
     })
-  }
+  },[])
 
   return (
     <div className="App">
