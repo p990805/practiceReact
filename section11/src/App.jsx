@@ -3,7 +3,7 @@ import Header from './components/Header'
 import Editer from './components/Editer'
 import List from './components/List'
 
-import {useState, useRef, useReducer,useCallback} from 'react'
+import {useState, useRef, useReducer,useCallback,createContext} from 'react'
 
 const mockData=[
   {
@@ -25,6 +25,7 @@ const mockData=[
     date: new Date().getTime(),
   }
 ]
+export const TodoContext =createContext();
 
 function reducer(state,action){
   switch (action.type){
@@ -74,8 +75,12 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Editer onCreate={onCreate}/>
-      <List todos={todos} onUpdate={onUpdate} onDelete={onDelete}/>
+      <TodoContext.Provider value ={{
+        todos,onCreate,onUpdate,onDelete,
+      }}>
+      <Editer />
+      <List />
+      </TodoContext.Provider>
     </div>
   )
 }
