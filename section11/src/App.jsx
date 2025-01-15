@@ -3,7 +3,7 @@ import Header from './components/Header'
 import Editer from './components/Editer'
 import List from './components/List'
 
-import {useState, useRef, useReducer,useCallback,createContext} from 'react'
+import {useState, useRef, useReducer,useCallback,createContext,useMemo} from 'react'
 
 const mockData=[
   {
@@ -25,7 +25,6 @@ const mockData=[
     date: new Date().getTime(),
   }
 ]
-export const TodoContext =createContext();
 
 function reducer(state,action){
   switch (action.type){
@@ -40,6 +39,9 @@ function reducer(state,action){
 
   }
 }
+
+export const TodoStateContext =createContext();
+export const TodoDispatchContext = createContext();
 
 function App() {
   
@@ -72,15 +74,21 @@ function App() {
     })
   },[])
 
+  const memoizedDispatch =useMemo(()=>{
+    return {onCreate,onUpdate,onDelete};
+  },[])
+
   return (
     <div className="App">
       <Header />
-      <TodoContext.Provider value ={{
-        todos,onCreate,onUpdate,onDelete,
-      }}>
-      <Editer />
-      <List />
-      </TodoContext.Provider>
+      <TodoStateContext.Provider value={todos}>
+        <TodoDispatchContext.Provider value ={memoizedDispatch}>
+        <Editer />
+        <List />
+
+      </TodoDispatchContext.Provider>
+
+      </TodoStateContext.Provider>
     </div>
   )
 }
